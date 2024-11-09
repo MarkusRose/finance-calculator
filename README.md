@@ -2,26 +2,24 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.11.
 
-## Development server
+## Running, building and testing the app
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Development server
 
-## Code scaffolding
+Run `ng serve` for a dev server. Navigate to `http://localhost:4444/`. The application will automatically reload if you change any of the source files.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Alias: `npm start`
 
-## Build
+### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+### Jest for testing in Angular
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Using [jest-preset-angular](https://github.com/thymikee/jest-preset-angular#jest-preset-angular) the project is configured to use `npm test` to run jest unit tests.
 
-## Running end-to-end tests
+## About the app
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+This app was created as a practical exercise for unit and e2e testing. Git's commits have been structured to follow a clear progression. We will use this application to step through intersting topics of test-automation to learn with an example the do's (and sometimes dont's) of how testing works.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+First up: adding jest and removing jasmine and karma.
