@@ -23,3 +23,18 @@ Using [jest-preset-angular](https://github.com/thymikee/jest-preset-angular#jest
 This app was created as a practical exercise for unit and e2e testing. Git's commits have been structured to follow a clear progression. We will use this application to step through intersting topics of test-automation to learn with an example the do's (and sometimes dont's) of how testing works.
 
 First up: adding jest and removing jasmine and karma.
+
+### Adding the required packages for jest in angular
+
+To add jest to an existing angular project we can run:
+`npm i jest jest-preset-angular @types/jest`
+
+To have a cleaner project, we can also remove all packages associated with jasmine and karma. Be aware that ng test will not work after this step unless using.
+
+Regarless of removing jasime and karma, it is important to replace the types in the `tsconfig.spec.json` with `types = ['jest']`. We also need to setup the jest configuration within the files:
+
+-   `jest.config.js`
+-   `setup-jest.ts`
+
+Once that is done we can start to build our project's framework.
+Please see commit "create a prototype app without tests" to continue.
