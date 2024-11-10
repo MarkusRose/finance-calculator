@@ -46,3 +46,14 @@ Within this commit we are setting up a very simple finance calculator app that t
 The app will have a navbar with routing and an about page. But the heart of the application will take place in the `loan-calculator` component. Here is where most of the changes will of the future commits will originate as we begin to refactor this application and add tests to it.
 
 Next we will start adding our first tests. Please see commit "refactor to have utilities with tests".
+
+### Testing simple utility functions
+
+With this commit we are introducing unit tests to our application:
+
+-   We have extracted some business logic / simple calculations and moved them to the utility file `finance.util.ts`.
+-   At the same time we have added `finance.util.spec.ts` and have started creating tests for how we imagine our future utilities to function.
+-   Finally we have moved the code for the utilities from `loan-calculator.component.ts` into the utility functions and adapted the code so that our tests pass. (This last step ideally does not alter the tests themselves, but only the newly created utility functions.)
+
+Now that we have tested some basic utilities, it is time to move on to a more complex service class.
+See commit "adding a history service with unit tests" to continue.

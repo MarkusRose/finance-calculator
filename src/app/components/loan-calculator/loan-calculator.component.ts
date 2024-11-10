@@ -10,6 +10,7 @@ import {
     ValidatorFn,
     Validators,
 } from '@angular/forms';
+import { calculateLoanDuration, minimumMonthlyPayment } from '../../utils/finance.util';
 
 @Component({
     selector: 'fincal-loan-calculator',
@@ -32,7 +33,7 @@ export class LoanCalculatorComponent implements OnInit {
                 interestRate: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)]),
                 monthlyRepayment: new FormControl(0, [Validators.required, Validators.min(0)]),
             },
-            { validator: [this.validateRepayment] }
+            { validators: [this.validateRepayment] }
         );
     }
 
@@ -41,26 +42,13 @@ export class LoanCalculatorComponent implements OnInit {
         const interestRate: number = this.loanConditionsForm.controls['interestRate'].value / 100;
         const repayment: number = this.loanConditionsForm.controls['monthlyRepayment'].value;
 
-        let amount = initialAmount;
-        let month = 0;
-        let total = 0;
-        let netRepayment = 0;
+        ({ duration: this.duration, total: this.totalAmount } = calculateLoanDuration(
+            initialAmount,
+            interestRate,
+            repayment
+        ));
 
-        while (amount > 0) {
-            month = month + 1;
-            netRepayment = repayment - (amount * interestRate) / 12;
-            if (amount > netRepayment) {
-                total = total + repayment;
-                amount = amount - netRepayment;
-            } else {
-                total = total + amount * (1 + interestRate / 12);
-                amount = 0;
-            }
-        }
-
-        this.duration = month;
-        this.totalAmount = total;
-        this.totalInterest = total - initialAmount;
+        this.totalInterest = this.totalAmount - initialAmount;
     }
 
     public onReset(): void {
@@ -74,7 +62,7 @@ export class LoanCalculatorComponent implements OnInit {
             return null;
         }
         const values = control.value;
-        const minRepayment = (values.loanAmount * values.interestRate) / 12 / 100;
+        const minRepayment = minimumMonthlyPayment(values.loanAmount, values.interestRate / 100);
         if (values.monthlyRepayment <= minRepayment && values.loanAmount > 0) {
             const error = {
                 paymentTooLow: `Monthly payment must be larger than ${Math.floor(100 * minRepayment) / 100} €.`,
