@@ -38,3 +38,11 @@ Regarless of removing jasime and karma, it is important to replace the types in 
 
 Once that is done we can start to build our project's framework.
 Please see commit "create a prototype app without tests" to continue.
+
+### The app prototype - Finance Calculator
+
+Within this commit we are setting up a very simple finance calculator app that takes in information about a loan and calculates the repayment duration as well as total spent money and total amount spent on interest.
+
+The app will have a navbar with routing and an about page. But the heart of the application will take place in the `loan-calculator` component. Here is where most of the changes will of the future commits will originate as we begin to refactor this application and add tests to it.
+
+Next we will start adding our first tests. Please see commit "refactor to have utilities with tests".

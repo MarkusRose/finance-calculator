@@ -1,0 +1,71 @@
+<h1>Loan Calculator</h1>
+<hr />
+<h2>Loan Conditions</h2>
+<form [formGroup]="loanConditionsForm" (submit)="onSubmit()">
+    <div class="mb-3">
+        <label for="loanAmount" class="form-label">Loan amount</label>
+        <div class="input-group">
+            <input
+                type="number"
+                class="form-control"
+                id="loanAmount"
+                formControlName="loanAmount"
+                [ngClass]="{ 'is-invalid': loanConditionsForm.controls['loanAmount'].invalid }"
+            />
+            <span class="input-group-text">€</span>
+            <div class="invalid-feedback">Please enter a positive number.</div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="interestRate" class="form-label">Interest rate p.A.</label>
+        <div class="input-group">
+            <input
+                type="number"
+                class="form-control"
+                id="interestRate"
+                formControlName="interestRate"
+                [ngClass]="{ 'is-invalid': loanConditionsForm.controls['interestRate'].invalid }"
+            />
+            <span class="input-group-text">%</span>
+            <div class="invalid-feedback">Please enter a percentage between 0 and 100.</div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="montlyRepayment" class="form-label">Monthly repayment</label>
+        <div class="input-group">
+            <input
+                type="number"
+                class="form-control"
+                id="monthlyRepayment"
+                formControlName="monthlyRepayment"
+                [ngClass]="{ 'is-invalid': loanConditionsForm.controls['monthlyRepayment'].invalid }"
+            />
+            <span class="input-group-text">€</span>
+            <div class="invalid-feedback">
+                {{ loanConditionsForm.controls['monthlyRepayment'].errors?.['paymentTooLow'] ?? 'Please enter a positive value.'}}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="loanConditionsForm.invalid">Calculate</button>
+</form>
+<hr />
+<h2>Loan Results</h2>
+<div>
+    <div class="mb-3 row">
+        <span class="col">Duration:</span>
+        <span class="col"
+            ><ng-container *ngIf="duration !== undefined"
+                >{{ duration }} months ({{ duration / 12 | number : '1.1-1' }} years)</ng-container
+            ></span
+        >
+    </div>
+    <div class="mb-3 row">
+        <span class="col">Total amount payed:</span>
+        <span class="col" *ngIf="totalAmount !== undefined">{{ totalAmount | number : '1.2-2' }} €</span>
+    </div>
+    <div class="mb-3 row">
+        <span class="col">Total interest payed:</span>
+        <span class="col" *ngIf="totalInterest !== undefined">{{ totalInterest | number : '1.2-2' }} €</span>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="onReset()">Reset</button>
+</div>
