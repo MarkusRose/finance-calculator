@@ -74,3 +74,23 @@ Changes:
 -   show history table / list below results section.
 
 Next up: component testing in jest.
+
+### Adding tests to components
+
+We have arrived at component testing. Our existing component `loan-calculator.component` deserves to be tested thoroughly. To do this we make the following changes:
+
+-   add spec file to the `loan-calculator.component`
+-   configure TestBed's testing module and compile the imported/declared components
+-   mock the `LoanHistoryService` and provide it
+-   test the form validation
+-   test the history display
+
+Notes to keep in mind:
+
+-   Mocking is important to test only the component and not any services that might have complex functionality. These should be tested independantly.
+-   Instead of waiting on the outcome of a already tested function, we can use jest's `spyOn` to check that the function was called (optionally with the correct inputs, or the correct number of times).
+-   When testing an entire component I took the approach of a user actually clicking a button and observing an outcome. This allows us to indireclty test private members, such as the form validator function in this example.
+
+I made heavy use of this resource: https://angular.dev/guide/testing/components-scenarios
+
+Next we want to take a look at state management. How do we test NgRx?

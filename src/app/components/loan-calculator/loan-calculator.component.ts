@@ -72,15 +72,18 @@ export class LoanCalculatorComponent implements OnInit {
             return null;
         }
         const values = control.value;
-        const minRepayment = minimumMonthlyPayment(values.loanAmount, values.interestRate / 100);
-        if (values.monthlyRepayment <= minRepayment && values.loanAmount > 0) {
-            const error = {
-                paymentTooLow: `Monthly payment must be larger than ${Math.floor(100 * minRepayment) / 100} €.`,
-            };
-            control.get('monthlyRepayment')?.setErrors(error);
-            return error;
-        } else {
-            return null;
+        try {
+            const minRepayment = minimumMonthlyPayment(values.loanAmount, values.interestRate / 100);
+            if (values.monthlyRepayment <= minRepayment && values.loanAmount > 0) {
+                const error = {
+                    paymentTooLow: `Monthly payment must be larger than ${Math.floor(100 * minRepayment) / 100} €.`,
+                };
+                return error;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return { error };
         }
     };
 }
