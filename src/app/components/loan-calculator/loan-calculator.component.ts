@@ -11,6 +11,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { calculateLoanDuration, minimumMonthlyPayment } from '../../utils/finance.util';
+import { LoanHistoryService } from '../../services/loan-history.service';
 
 @Component({
     selector: 'fincal-loan-calculator',
@@ -25,6 +26,7 @@ export class LoanCalculatorComponent implements OnInit {
     public totalInterest?: number;
 
     private readonly formBuilder = inject(FormBuilder);
+    protected readonly loanHistory = inject(LoanHistoryService);
 
     public ngOnInit(): void {
         this.loanConditionsForm = this.formBuilder.group(
@@ -49,12 +51,20 @@ export class LoanCalculatorComponent implements OnInit {
         ));
 
         this.totalInterest = this.totalAmount - initialAmount;
+        this.loanHistory.updateHistory({
+            amount: initialAmount,
+            interest: interestRate * 100,
+            repayment: repayment,
+            duration: this.duration,
+            total: this.totalAmount,
+        });
     }
 
     public onReset(): void {
         this.duration = undefined;
         this.totalAmount = undefined;
         this.totalInterest = undefined;
+        this.loanHistory.reset();
     }
 
     private validateRepayment: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

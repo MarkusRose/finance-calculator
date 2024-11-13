@@ -57,3 +57,20 @@ With this commit we are introducing unit tests to our application:
 
 Now that we have tested some basic utilities, it is time to move on to a more complex service class.
 See commit "adding a history service with unit tests" to continue.
+
+### Adding unit tests to a service
+
+Now we are adding a history service, that will keep track of previous requests and allows us to look what we have already calculated. The new service and associated test are under the services folder: `loan-history.service.*`.
+
+Services are more complex to test. These require a `TestBed` to configure a test module. This is done very similarly to normal Angular modules. Once that is done, we can inject the service we create.
+
+After injecting the service, testing is very similar to utility functions. We do have to keep in mind that the service needs to be fresh for each test, so the `beforeEach` statement becomes very important.
+
+Changes:
+
+-   add service for history & spec file
+-   Store up to the last `maxHistoryLength` requests in a history object.
+-   add function to recall history item and clear history
+-   show history table / list below results section.
+
+Next up: component testing in jest.

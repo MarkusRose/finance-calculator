@@ -46,11 +46,15 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="loanConditionsForm.invalid">Calculate</button>
+    <hr />
+    <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary" [disabled]="loanConditionsForm.invalid">Calculate</button>
+        <button type="button" class="btn btn-primary" (click)="onReset()">Reset</button>
+    </div>
 </form>
 <hr />
 <h2>Loan Results</h2>
-<div>
+<div class="mb-3">
     <div class="mb-3 row">
         <span class="col">Duration:</span>
         <span class="col"
@@ -67,5 +71,29 @@
         <span class="col">Total interest payed:</span>
         <span class="col" *ngIf="totalInterest !== undefined">{{ totalInterest | number : '1.2-2' }} €</span>
     </div>
-    <button type="button" class="btn btn-primary" (click)="onReset()">Reset</button>
+</div>
+<hr />
+<h2>Calculation History</h2>
+<div class="mb-3">
+    <div *ngFor="let history of loanHistory.loanHistory | async" class="card mb-1">
+        <div class="d-flex justify-content-between flex-wrap card-header">
+            <span>Loan: {{ history.amount | number : '1.2-2' }} €</span>
+            <span>Interest: {{ history.interest | number : '1.2-2' }} %</span>
+            <span>Repayment: {{ history.repayment | number : '1.2-2' }} €</span>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <span>Duration:</span>
+                <span>{{ history.duration }} months ({{ history.duration / 12 | number : '1.1-1' }} years)</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>Total payed:</span>
+                <span>{{ history.total | number : '1.2-2' }} €</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>Interest payed:</span>
+                <span> {{ history.repayment | number : '1.2-2' }} €</span>
+            </div>
+        </div>
+    </div>
 </div>
