@@ -120,3 +120,17 @@ Remarks:
 -   Effects have not been included here. I'm hoping to cover them in the future. Meanwhile please have a look at the docs here: [EffectTesting](https://ngrx.io/guide/effects/testing)
 
 Next: testing observables and promises
+
+### Testing Promises and Observables
+
+Since we didn't encounter any scenario yet where asynchronous behavior was a factor, I've included the `asynchronous.service` with tests to highlight some appooaches when it comes to observables and promises.
+
+Main takeaways:
+
+-   Observables: When observables require time to emit the next value, then we need to provide a `done()` callback to the argument of our testing function: `it("<Test name>", (done) => {< do the tests here>})`
+-   Promises: It is very dangerous while testing promises to forget async/await. The test will run, but the expect will not be encountered or will not be awaited for. The result is a test that passes, because no expectation was tested. Ways to avoid this is using `waitForAsync`, or returning the expect statement in the testing function: `it("<test name>", () => { return expect(<promise to test>).resolve.toEqual(<expected value>)})`
+
+Resources:
+
+-   [Jest Documentation: asynchronous tests](https://jestjs.io/docs/asynchronous)
+-   [Fireship: testing observables](https://fireship.io/snippets/testing-rxjs-observables-with-jest/)
