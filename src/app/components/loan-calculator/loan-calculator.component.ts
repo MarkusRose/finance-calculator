@@ -12,6 +12,11 @@ import {
 } from '@angular/forms';
 import { calculateLoanDuration, minimumMonthlyPayment } from '../../utils/finance.util';
 import { LoanHistoryService } from '../../services/loan-history.service';
+import { Store } from '@ngrx/store';
+import { loanActions } from '../../+state/loan.actions';
+import { selectLoanCalculation } from '../../+state/loan.selectors';
+import { filter, take } from 'rxjs';
+import { LoanHistory } from '../../entities';
 
 @Component({
     selector: 'fincal-loan-calculator',
@@ -27,6 +32,7 @@ export class LoanCalculatorComponent implements OnInit {
 
     private readonly formBuilder = inject(FormBuilder);
     protected readonly loanHistory = inject(LoanHistoryService);
+    private readonly store = inject(Store);
 
     public ngOnInit(): void {
         this.loanConditionsForm = this.formBuilder.group(
@@ -37,6 +43,22 @@ export class LoanCalculatorComponent implements OnInit {
             },
             { validators: [this.validateRepayment] }
         );
+        this.store
+            .select(selectLoanCalculation)
+            .pipe(
+                filter((loan): loan is LoanHistory => !!loan),
+                take(1)
+            )
+            .subscribe((loan) => {
+                this.loanConditionsForm.setValue({
+                    loanAmount: loan.amount,
+                    interestRate: Math.round(loan.interest * 1000) / 1000,
+                    monthlyRepayment: loan.repayment,
+                });
+                this.totalAmount = loan.total;
+                this.duration = loan.duration;
+                this.totalInterest = loan.total - loan.amount;
+            });
     }
 
     public onSubmit(): void {
@@ -58,6 +80,17 @@ export class LoanCalculatorComponent implements OnInit {
             duration: this.duration,
             total: this.totalAmount,
         });
+        this.store.dispatch(
+            loanActions.setLoanValues({
+                loanValues: {
+                    amount: initialAmount,
+                    interest: interestRate * 100,
+                    repayment: repayment,
+                    duration: this.duration,
+                    total: this.totalAmount,
+                },
+            })
+        );
     }
 
     public onReset(): void {
@@ -65,6 +98,7 @@ export class LoanCalculatorComponent implements OnInit {
         this.totalAmount = undefined;
         this.totalInterest = undefined;
         this.loanHistory.reset();
+        this.store.dispatch(loanActions.resetLoanValues());
     }
 
     private validateRepayment: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

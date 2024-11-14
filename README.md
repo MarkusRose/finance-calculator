@@ -94,3 +94,29 @@ Notes to keep in mind:
 I made heavy use of this resource: https://angular.dev/guide/testing/components-scenarios
 
 Next we want to take a look at state management. How do we test NgRx?
+
+### Adding NgRx State and tests
+
+To test state management for NgRx reuses most of the approaches taken for utilities, services and components.
+
+-   Actions are a set of defined objects, so there is nothing to test here. All the functionality lies in reducers, selectors and effects.
+-   The reducers can always be testes just like utilities, since they are simple functions.
+-   Selectors can make use of the projector member to direclty test them on differents states as test cases.
+
+Changes:
+
+-   add ngrx to the project: `ng add @ngrx/store@latest`
+-   (optional) add ngrx devtools to project.
+-   create actions, reducers, selecters so that the user can switch to the about page and back to Loan Calculator without loosing the input values.
+-   add tests to reducer and selectors
+-   add integration tests to the `loan-calculator` component via the MockStore
+
+Most used resource: [NgRx Store Testing](https://ngrx.io/guide/store/testing)
+
+Remarks:
+
+-   Selector testing to me only makes sense, if the selector is more complex than just passing state properties.
+-   Components can also mock the selectors, so we can separate the testing of the store from the components. (Not doing integration testing).
+-   Effects have not been included here. I'm hoping to cover them in the future. Meanwhile please have a look at the docs here: [EffectTesting](https://ngrx.io/guide/effects/testing)
+
+Next: testing observables and promises

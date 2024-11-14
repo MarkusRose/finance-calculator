@@ -4,10 +4,16 @@ import { By } from '@angular/platform-browser';
 import { LoanHistoryService } from '../../services/loan-history.service';
 import { BehaviorSubject } from 'rxjs';
 import { LoanHistory } from '../../entities';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { initialState, loanFeatureName, LoanState } from '../../+state/loan.reducer';
 
 describe('LoanCalculatorComponent', () => {
     let fixture: ComponentFixture<LoanCalculatorComponent>;
     let component: LoanCalculatorComponent;
+    let store: MockStore;
+    const initialGlobalState: Record<string, LoanState> = {
+        [loanFeatureName]: initialState,
+    };
 
     const mockLoanHistoryService = {
         reset: jest.fn,
@@ -17,9 +23,12 @@ describe('LoanCalculatorComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LoanCalculatorComponent],
-            providers: [{ provide: LoanHistoryService, useValue: mockLoanHistoryService }],
+            providers: [
+                { provide: LoanHistoryService, useValue: mockLoanHistoryService },
+                provideMockStore({ initialState: initialGlobalState }),
+            ],
         }).compileComponents();
-
+        store = TestBed.inject(MockStore);
         fixture = TestBed.createComponent(LoanCalculatorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -104,6 +113,36 @@ describe('LoanCalculatorComponent', () => {
             jest.spyOn(mockLoanHistoryService, 'reset');
             resetButton.triggerEventHandler('click');
             expect(mockLoanHistoryService.reset).toHaveBeenCalled();
+        });
+    });
+
+    describe('NgRx Loan Store Interaction', () => {
+        it('Should get inital values from store', () => {
+            const newInitalState: LoanHistory = {
+                amount: 42000,
+                interest: 4.2,
+                repayment: 420,
+                duration: 42,
+                total: 42424,
+            };
+            store.setState({
+                [loanFeatureName]: {
+                    loanValues: newInitalState,
+                },
+            });
+            fixture = TestBed.createComponent(LoanCalculatorComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+
+            expect(component.duration).toEqual(newInitalState.duration);
+            expect(component.totalAmount).toEqual(newInitalState.total);
+            const inputList = fixture.debugElement
+                .queryAll(By.css('input'))
+                .map((el) => el.nativeElement as HTMLButtonElement);
+            expect(inputList.length).toEqual(3);
+            expect(inputList[0].value).toEqual(`${newInitalState.amount}`);
+            expect(inputList[1].value).toEqual(`${newInitalState.interest}`);
+            expect(inputList[2].value).toEqual(`${newInitalState.repayment}`);
         });
     });
 });
