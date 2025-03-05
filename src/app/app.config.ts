@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { loanFeatureName, loanReducer } from './+state/loan.reducer';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -18,6 +19,10 @@ export const appConfig: ApplicationConfig = {
             trace: false,
             traceLimit: 75,
             connectInZone: true,
+        }),
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
         }),
     ],
 };
